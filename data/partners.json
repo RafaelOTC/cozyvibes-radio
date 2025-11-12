@@ -1,0 +1,17 @@
+[
+  {
+    "name": "Lofi Girl",
+    "logo": "/assets/img/default_cover.jpg",
+    "link": "https://youtube.com/@LofiGirl",
+    "country": "fr",
+    "genres": ["lofi","study","chill"]
+  },
+  {
+    "name": "Jazz Café",
+    "logo": "/assets/img/default_cover.jpg",
+    "link": "https://youtube.com",
+    "country": "us",
+    "genres": ["jazz","ambient"]
+  }
+]
+

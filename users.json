@@ -1,0 +1,15 @@
+[
+    {
+        "id": "u_d93e5ef250",
+        "email": "rafy21@gmail.com",
+        "display_name": "TEST",
+        "role": "Partner",
+        "is_active": 1,
+        "streams_limit": 5,
+        "verified": 0,
+        "password_hash": "$2y$10$aR4/S.wYCMuRnvoxTHgmeubnr69inEiKCJsAhxB9Af3.FjgWsUn4G",
+        "created_at": "2025-11-12T14:12:20+00:00",
+        "website": "",
+        "youtube": ""
+    }
+]
