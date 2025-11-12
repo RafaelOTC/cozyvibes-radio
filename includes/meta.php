@@ -16,6 +16,8 @@ function page_head($opts = []) {
   if ($noindex) echo "<meta name=\"robots\" content=\"noindex,nofollow\">\n";
   echo "<link rel=\"icon\" href=\"/assets/img/favicon.ico\">\n";
   echo "<link rel=\"stylesheet\" href=\"/assets/css/app.css?v=".time()."\">\n";
+
+  // === Cozy Vibes Radio dark/light theme (anti-flash + assets) ===
   echo <<<HTML
 <script>
 (function () {
@@ -27,6 +29,7 @@ function page_head($opts = []) {
   var theme = (stored === 'light' || stored === 'dark') ? stored : (sysDark() ? 'dark' : 'light');
   document.documentElement.setAttribute('data-theme', theme);
 
+  // theme-color pt. mobil – crem pe light, închis pe dark
   var meta = document.querySelector('meta[name="theme-color"]');
   if (!meta) { meta = document.createElement('meta'); meta.setAttribute('name', 'theme-color'); document.head.appendChild(meta); }
   meta.setAttribute('content', theme === 'dark' ? '#0b1220' : '#f8f5ef');
@@ -35,10 +38,11 @@ function page_head($opts = []) {
 <link rel="stylesheet" href="/assets/css/theme.css">
 <script src="/assets/js/theme-toggle.js" defer></script>
 HTML;
+  // === end theme ===
+
   echo "</head>\n<body class=\"site\">\n";
   header_nav($active);
 }
-
 
 function header_nav($active = '') {
   if (!$active && isset($GLOBALS['__cv_active'])) $active = $GLOBALS['__cv_active'];
@@ -54,7 +58,13 @@ function header_nav($active = '') {
     $cls = ($active === $L['key']) ? 'active' : '';
     echo "<a class=\"$cls\" href=\"{$L['href']}\">{$L['label']}</a>";
   }
-  
+
+  // === Toggle dark/light în nav (vizibil mereu) ===
+  echo '<button id="theme-toggle" class="btn secondary" aria-pressed="false" title="Toggle theme" style="margin-left:1rem;gap:.4rem">';
+  echo '  <span id="theme-toggle-icon" aria-hidden="true">🌙</span>';
+  echo '  <span class="sr-only">Schimbă tema</span>';
+  echo '</button>';
+
   echo "</nav></div></header>";
 }
 
