@@ -1,51 +1,48 @@
-/* ===== Cozy Vibes Radio – Theme Tokens ===== */
+/* ===== Cozy Vibes Radio – Theme Tokens (Light: dark-cream, Dark: deeper) ===== */
 :root {
-  /* Light */
-  --bg: #ffffff;
-  --text: #0f172a;          /* slate-900 */
-  --muted: #475569;         /* slate-600 */
-  --card: #f8fafc;          /* slate-50 */
-  --border: #e2e8f0;        /* slate-200 */
-  --accent: #7c3aed;        /* violet-600 */
+  /* Light (crem/bej mai închis) */
+  --bg: #ece4d8;            /* crem mai închis (background principal) */
+  --text: #1f1a14;          /* text foarte închis, cald, bun pe crem */
+  --muted: #5a544b;         /* secundar pe crem */
+  --card: #f4ede3;          /* panouri/liste (mai deschis decât bg) */
+  --border: #d9cdbd;        /* bej pal pentru linii subtile */
+  --accent: #9a6b4f;        /* coffee/tan */
   --accent-contrast: #ffffff;
-  --link: #2563eb;          /* blue-600 */
-  --shadow: 0 10px 25px rgba(2, 6, 23, .06);
+  --link: #6f522c;          /* maro-auriu pentru linkuri */
+  --shadow: 0 10px 25px rgba(31, 26, 20, .08);
 }
 
 :root[data-theme="dark"] {
-  --bg: #0b1220;            /* foarte închis, albastru-negru */
-  --text: #e5e7eb;          /* slate-200 */
-  --muted: #9ca3af;         /* gray-400 */
-  --card: #0f172a;          /* slate-900 */
-  --border: #1f2937;        /* gray-800 */
-  --accent: #8b5cf6;        /* violet-500 */
-  --accent-contrast: #0b1220;
-  --link: #93c5fd;          /* blue-300 */
-  --shadow: 0 10px 25px rgba(0, 0, 0, .35);
+  /* Dark (mai închis) */
+  --bg: #050a12;            /* mai adânc decât înainte */
+  --text: #eaeef7;          /* text foarte deschis */
+  --muted: #a9b2c2;         /* gri-albăstrui pentru secundar */
+  --card: #0a0f1a;          /* carduri vizibile pe fundal */
+  --border: #111827;        /* contur discret */
+  --accent: #d0b089;        /* accent „cafea cu lapte” vizibil pe întunecat */
+  --accent-contrast: #0a0f1a;
+  --link: #c8d9ff;          /* linkuri ușor albăstrui pentru contrast bun */
+  --shadow: 0 10px 25px rgba(0, 0, 0, .45);
 }
 
 /* Respectă preferința sistemului când nu e ales manual */
 @media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]):not([data-theme="dark"]) {
-    color-scheme: dark;
-  }
+  :root:not([data-theme="light"]):not([data-theme="dark"]) { color-scheme: dark; }
 }
 @media (prefers-color-scheme: light) {
-  :root:not([data-theme="light"]):not([data-theme="dark"]) {
-    color-scheme: light;
-  }
+  :root:not([data-theme="light"]):not([data-theme="dark"]) { color-scheme: light; }
 }
 
 /* ===== Aplicare globală ===== */
-html, body {
-  background: var(--bg);
-  color: var(--text);
-}
+html, body { background: var(--bg); color: var(--text); }
 * { box-sizing: border-box; }
 
 a { color: var(--link); }
+a:hover { opacity:.9; text-decoration: underline; }
+
 hr, .divider { border-color: var(--border); }
 
+/* Elemente comune */
 .card {
   background: var(--card);
   border: 1px solid var(--border);
@@ -64,10 +61,17 @@ hr, .divider { border-color: var(--border); }
   border: 1px solid var(--border);
 }
 
+/* Badge/tag */
 .tag {
   display:inline-block; padding:.25rem .5rem; border-radius:999px;
-  background: color-mix(in srgb, var(--accent) 15%, transparent);
+  background: color-mix(in srgb, var(--accent) 12%, transparent);
   color: var(--text); border: 1px solid var(--border);
+}
+
+/* Bare / zone cromatice (dacă nu ai deja în app.css) */
+.topbar, .site-foot {
+  background: var(--card);
+  border-bottom: 1px solid var(--border);
 }
 
 /* Mică tranziție între teme */
@@ -76,11 +80,12 @@ html { transition: background-color .2s ease, color .2s ease; }
 /* Toggle flotant (fallback dacă nu ai buton în nav) */
 #cvr-theme-fab {
   position: fixed; right: 16px; bottom: 16px; z-index: 9999;
-  background: var(--card); color: var(--text); border: 1px solid var(--border);
-  border-radius: 999px; padding: .55rem .7rem; box-shadow: var(--shadow);
-  cursor: pointer; line-height: 1; font-size: 16px;
+  background: var(--card); color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 999px; padding: .55rem .7rem;
+  box-shadow: var(--shadow); cursor: pointer; line-height: 1; font-size: 16px;
 }
 #cvr-theme-fab:focus { outline: 2px solid var(--accent); outline-offset: 2px; }
 
-/* Utilitate accesibilitate */
+/* Accesibilitate */
 .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;}
