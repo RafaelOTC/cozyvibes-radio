@@ -32,7 +32,7 @@ function page_head($opts = []) {
   // theme-color pt. mobil – crem pe light, închis pe dark
   var meta = document.querySelector('meta[name="theme-color"]');
   if (!meta) { meta = document.createElement('meta'); meta.setAttribute('name', 'theme-color'); document.head.appendChild(meta); }
-  meta.setAttribute('content', theme === 'dark' ? '#0b1220' : '#f8f5ef');
+  meta.setAttribute('content', theme === 'dark' ? '#050a12' : '#ece4d8');
 })();
 </script>
 <link rel="stylesheet" href="/assets/css/theme.css">
