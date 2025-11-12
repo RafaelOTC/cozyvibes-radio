@@ -1,5 +1,6 @@
 <?php
 if (!defined('SITE_NAME')) define('SITE_NAME','Cozy Vibes Radio');
+<?php include __DIR__.'/theme-head.php'; ?>
 
 function page_head($opts = []) {
   if (is_string($opts)) $opts = ['active'=>$opts];
