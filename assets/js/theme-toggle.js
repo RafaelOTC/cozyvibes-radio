@@ -1,83 +1,77 @@
-/* ===== Cozy Vibes Radio – Theme Tokens (Light: beige/cream) ===== */
-:root {
-  /* Light (beige/cream) */
-  --bg: #f8f5ef;            /* crem cald, paper-like */
-  --text: #2b2b2b;          /* aproape negru cald */
-  --muted: #6b645a;         /* gri-brun pt. texte secundare */
-  --card: #fffaf3;          /* panouri ușor mai deschise ca bg */
-  --border: #e8dfd1;        /* bej pal pentru linii subtile */
-  --accent: #a97155;        /* tan/cafea cu lapte */
-  --accent-contrast: #ffffff;
-  --link: #7c5e2a;          /* maro-auriu pentru linkuri */
-  --shadow: 0 10px 25px rgba(43, 43, 43, .06);
-}
+(function () {
+  var STORAGE_KEY = 'cvr-theme';
+  var DOC = document.documentElement;
 
-:root[data-theme="dark"] {
-  /* Dark (rămâne modern, cu nuanțe rece-închise) */
-  --bg: #0b1220;
-  --text: #e5e7eb;
-  --muted: #9ca3af;
-  --card: #0f172a;
-  --border: #1f2937;
-  --accent: #8b5cf6;
-  --accent-contrast: #0b1220;
-  --link: #93c5fd;
-  --shadow: 0 10px 25px rgba(0, 0, 0, .35);
-}
+  function sysPrefersDark() {
+    return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+  }
+  function getTheme() {
+    var t = DOC.getAttribute('data-theme');
+    return t || (sysPrefersDark() ? 'dark' : 'light');
+  }
+  function setTheme(t) {
+    DOC.setAttribute('data-theme', t);
+    try { localStorage.setItem(STORAGE_KEY, t); } catch(e) {}
+    var meta = document.querySelector('meta[name="theme-color"]');
+    if (meta) meta.setAttribute('content', t === 'dark' ? '#0b1220' : '#f8f5ef');
+    updateUI(t);
+  }
+  function updateUI(t) {
+    var btn = document.getElementById('theme-toggle');
+    var icon = document.getElementById('theme-toggle-icon');
+    if (btn) btn.setAttribute('aria-pressed', t === 'dark');
+    if (icon) icon.textContent = t === 'dark' ? '🌞' : '🌙';
+    var fab = document.getElementById('cvr-theme-fab');
+    if (fab) fab.setAttribute('aria-label', t === 'dark' ? 'Switch to light theme' : 'Switch to dark theme');
+  }
 
-/* Respectă preferința sistemului când nu e ales manual */
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]):not([data-theme="dark"]) { color-scheme: dark; }
-}
-@media (prefers-color-scheme: light) {
-  :root:not([data-theme="light"]):not([data-theme="dark"]) { color-scheme: light; }
-}
+  function wireNavButton() {
+    var btn = document.getElementById('theme-toggle');
+    if (!btn) return false;
+    btn.addEventListener('click', function () {
+      setTheme(getTheme() === 'dark' ? 'light' : 'dark');
+    });
+    updateUI(getTheme());
+    return true;
+  }
 
-/* ===== Aplicare globală ===== */
-html, body { background: var(--bg); color: var(--text); }
-* { box-sizing: border-box; }
+  function ensureFab() {
+    if (document.getElementById('theme-toggle')) return;
+    if (document.getElementById('cvr-theme-fab')) return;
+    var fab = document.createElement('button');
+    fab.id = 'cvr-theme-fab';
+    fab.type = 'button';
+    fab.innerText = getTheme() === 'dark' ? '🌞' : '🌙';
+    fab.addEventListener('click', function(){
+      var next = getTheme() === 'dark' ? 'light' : 'dark';
+      setTheme(next);
+      fab.innerText = next === 'dark' ? '🌞' : '🌙';
+    });
+    document.body.appendChild(fab);
+  }
 
-a { color: var(--link); }
-a:hover { opacity:.9; text-decoration: underline; }
+  // ✅ Corect: atașează handler-ul de schimbare fără să crape pe browsere vechi
+  function watchSystemThemeIfNoPreference() {
+    var saved;
+    try { saved = localStorage.getItem(STORAGE_KEY); } catch(e) { saved = null; }
+    if (saved === 'light' || saved === 'dark') return; // user alege manual
 
-hr, .divider { border-color: var(--border); }
+    var mq = window.matchMedia ? window.matchMedia('(prefers-color-scheme: dark)') : null;
+    if (!mq) return;
 
-.card {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  box-shadow: var(--shadow);
-}
+    var handler = function (e) { setTheme(e.matches ? 'dark' : 'light'); };
 
-.btn {
-  display: inline-flex; align-items: center; gap: .5rem;
-  background: var(--accent); color: var(--accent-contrast);
-  border: 0; border-radius: 10px; padding: .6rem .9rem;
-  font-weight: 600; cursor: pointer;
-}
-.btn.secondary {
-  background: transparent; color: var(--text);
-  border: 1px solid var(--border);
-}
+    if (typeof mq.addEventListener === 'function') {
+      mq.addEventListener('change', handler);
+    } else if (typeof mq.addListener === 'function') {
+      mq.addListener(handler); // vechi Safari/Chrome
+    }
+  }
 
-.tag {
-  display:inline-block; padding:.25rem .5rem; border-radius:999px;
-  background: color-mix(in srgb, var(--accent) 12%, transparent);
-  color: var(--text); border: 1px solid var(--border);
-}
-
-/* Mică tranziție între teme */
-html { transition: background-color .2s ease, color .2s ease; }
-
-/* Toggle flotant (fallback dacă nu ai buton în nav) */
-#cvr-theme-fab {
-  position: fixed; right: 16px; bottom: 16px; z-index: 9999;
-  background: var(--card); color: var(--text);
-  border: 1px solid var(--border);
-  border-radius: 999px; padding: .55rem .7rem;
-  box-shadow: var(--shadow); cursor: pointer; line-height: 1; font-size: 16px;
-}
-#cvr-theme-fab:focus { outline: 2px solid var(--accent); outline-offset: 2px; }
-
-/* Utilitate accesibilitate */
-.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;}
+  document.addEventListener('DOMContentLoaded', function () {
+    wireNavButton();
+    ensureFab();
+    updateUI(getTheme());
+    watchSystemThemeIfNoPreference();
+  });
+})();
