@@ -1,44 +1,49 @@
 <?php
-if (!defined('SITE_NAME')) define('SITE_NAME','Cozy Vibes Radio');
+// === Cozy Vibes Radio — meta.php (augmented pentru dark/light) ===
+// Poți seta $pageTitle și $pageDescription înainte de include.
+// Vor avea fallback-uri sigure dacă nu sunt definite.
+if (!isset($pageTitle))      $pageTitle = 'Cozy Vibes Radio — Relaxing streams for focus, study and calm.';
+if (!isset($pageDescription))$pageDescription = 'Lofi, jazz, chill & coffeehouse streams. Minimal, fast, global.';
+?>
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 
-function page_head($opts = []) {
-  if (is_string($opts)) $opts = ['active'=>$opts];
-  if (!is_array($opts)) $opts = [];
-  $title   = $opts['title']       ?? SITE_NAME;
-  $desc    = $opts['description'] ?? (SITE_NAME.' — 24/7 livestreams: jazz, lofi, ambient, rain.');
-  $noindex = !empty($opts['noindex']);
-  $active  = $opts['active']      ?? '';
-  $GLOBALS['__cv_active'] = $active;
+<title><?= htmlspecialchars($pageTitle, ENT_QUOTES) ?></title>
+<meta name="description" content="<?= htmlspecialchars($pageDescription, ENT_QUOTES) ?>">
 
-  echo "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n<meta charset=\"utf-8\">\n<meta name=\"viewport\" content=\"width=device-width,initial-scale=1\">\n";
-  echo '<title>'.htmlspecialchars($title)."</title>\n";
-  echo '<meta name="description" content="'.htmlspecialchars($desc).'">'."\n";
-  if ($noindex) echo "<meta name=\"robots\" content=\"noindex,nofollow\">\n";
-  echo "<link rel=\"icon\" href=\"/assets/img/favicon.ico\">\n";
-  echo "<link rel=\"stylesheet\" href=\"/assets/css/app.css?v=".time()."\">\n";
-  echo "</head>\n<body class=\"site\">\n";
-  header_nav($active);
-}
+<!-- Canonical / SEO / Social – păstrează-ți meta-urile existente aici -->
+<!-- <link rel="canonical" href="..."> -->
+<!-- <meta property="og:title" content="..."> -->
+<!-- <meta property="og:description" content="..."> -->
+<!-- <meta property="og:image" content="/assets/img/og.jpg"> -->
+<!-- <meta name="twitter:card" content="summary_large_image"> -->
 
-function header_nav($active = '') {
-  if (!$active && isset($GLOBALS['__cv_active'])) $active = $GLOBALS['__cv_active'];
-  $links = [
-    ['href'=>'/','key'=>'home','label'=>'Home'],
-    ['href'=>'/partners.php','key'=>'partners','label'=>'Partners'],
-    ['href'=>'/about.php','key'=>'about','label'=>'About'],
-    ['href'=>'/admin/','key'=>'admin','label'=>'Admin'],
-  ];
-  echo "<header class=\"topbar\"><div class=\"container\">";
-  echo "<a class=\"brand\" href=\"/\">".SITE_NAME."</a><nav>";
-  foreach ($links as $L) {
-    $cls = ($active === $L['key']) ? 'active' : '';
-    echo "<a class=\"$cls\" href=\"{$L['href']}\">{$L['label']}</a>";
-  }
-  echo "</nav></div></header>";
-}
+<!-- Bootstrap temă foarte devreme (anti-flash) -->
+<script>
+(function () {
+  var key = 'cvr-theme';
+  var stored = null;
+  try { stored = localStorage.getItem(key); } catch(e) {}
 
-function page_foot() {
-  echo "<footer class=\"site-foot\"><div class=\"container\">© ".date('Y')." ".SITE_NAME." — stay cozy ☕</div></footer>";
-  echo "<script src=\"/assets/js/app.js?v=".time()."\"></script>";
-  echo "</body></html>";
-}
+  function sysDark(){ return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches; }
+  var theme = (stored === 'light' || stored === 'dark') ? stored : (sysDark() ? 'dark' : 'light');
+  document.documentElement.setAttribute('data-theme', theme);
+
+  // meta theme-color pentru mobile
+  var meta = document.querySelector('meta[name="theme-color"]');
+  if (!meta) { meta = document.createElement('meta'); meta.setAttribute('name', 'theme-color'); document.head.appendChild(meta); }
+  meta.setAttribute('content', theme === 'dark' ? '#0b1220' : '#ffffff');
+})();
+</script>
+
+<!-- CSS tema -->
+<link rel="stylesheet" href="/assets/css/theme.css">
+
+<!-- Dacă ai un stylesheet global, păstrează-l după tema (exemplu): -->
+<?php /* <link rel="stylesheet" href="/assets/css/main.css"> */ ?>
+
+</head>
+<body>
