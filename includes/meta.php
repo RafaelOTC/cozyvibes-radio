@@ -16,6 +16,25 @@ function page_head($opts = []) {
   if ($noindex) echo "<meta name=\"robots\" content=\"noindex,nofollow\">\n";
   echo "<link rel=\"icon\" href=\"/assets/img/favicon.ico\">\n";
   echo "<link rel=\"stylesheet\" href=\"/assets/css/app.css?v=".time()."\">\n";
+  echo <<<HTML
+<script>
+(function () {
+  var key = 'cvr-theme';
+  var stored = null;
+  try { stored = localStorage.getItem(key); } catch(e) {}
+
+  function sysDark(){ return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches; }
+  var theme = (stored === 'light' || stored === 'dark') ? stored : (sysDark() ? 'dark' : 'light');
+  document.documentElement.setAttribute('data-theme', theme);
+
+  var meta = document.querySelector('meta[name="theme-color"]');
+  if (!meta) { meta = document.createElement('meta'); meta.setAttribute('name', 'theme-color'); document.head.appendChild(meta); }
+  meta.setAttribute('content', theme === 'dark' ? '#0b1220' : '#ffffff');
+})();
+</script>
+<link rel="stylesheet" href="/assets/css/theme.css">
+<script src="/assets/js/theme-toggle.js" defer></script>
+HTML;
   echo "</head>\n<body class=\"site\">\n";
   header_nav($active);
 }
