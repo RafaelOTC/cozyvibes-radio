@@ -1,0 +1,24 @@
+server {
+    listen 80;
+    server_name 104.248.0.226;
+    root /var/www/cozyvibes;
+    index index.php index.html;
+
+    add_header X-Frame-Options SAMEORIGIN;
+    add_header X-Content-Type-Options nosniff;
+
+    location / {
+        try_files $uri $uri/ /index.php?$query_string;
+    }
+
+    location ~ \.php$ {
+        include snippets/fastcgi-php.conf;
+        fastcgi_pass unix:/run/php/php8.3-fpm.sock;
+    }
+
+    location ~* \.(png|jpg|jpeg|gif|webp|svg|css|js|ico|woff2?)$ {
+        expires 7d;
+        access_log off;
+        add_header Cache-Control "public, max-age=604800";
+    }
+}

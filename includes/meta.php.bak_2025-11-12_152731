@@ -1,0 +1,51 @@
+<?php
+/* Meta + layout helpers — safe to include_once */
+
+/** HEAD + <body> open */
+if (!function_exists('page_head')) {
+  function page_head(array $opts = []){
+    $title     = $opts['title']       ?? 'Cozy Vibes Radio';
+    $desc      = $opts['description'] ?? 'Relaxing lofi, jazz & ambient streams.';
+    $canonical = $opts['canonical']   ?? '/';
+    $extra_css = $opts['extra_css']   ?? '';
+
+    echo "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n";
+    echo "  <meta charset=\"utf-8\">\n";
+    echo "  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n";
+    echo "  <title>".htmlspecialchars($title)."</title>\n";
+    echo "  <meta name=\"description\" content=\"".htmlspecialchars($desc)."\">\n";
+    echo "  <link rel=\"canonical\" href=\"".htmlspecialchars($canonical)."\">\n";
+    echo "  <link rel=\"icon\" href=\"/assets/img/favicon.png\">\n";
+    echo "  <link rel=\"stylesheet\" href=\"/assets/css/style.css?v=".time()."\">\n";
+    if ($extra_css) echo "  <style>{$extra_css}</style>\n";
+    echo "</head>\n<body class=\"site\">\n";
+  }
+}
+
+/** Top navigation + theme toggle */
+if (!function_exists('header_nav')) {
+  function header_nav(string $active = ''){
+    $is = fn($p) => $active === $p ? ' class="active"' : '';
+    echo '<header class="top">';
+    echo '  <a class="brand" href="/">☕ Cozy Vibes Radio</a>';
+    echo '  <nav>';
+    echo '    <a'.$is('home').' href="/">Home</a>';
+    echo '    <a'.$is('partners').' href="/partners.php">Partners</a>';
+    echo '    <a'.$is('about').' href="/about.php">About</a>';
+    echo '    <a href="/admin/">Admin</a>';
+    echo '    <button id="themeToggle" aria-label="Toggle theme">🌙</button>';
+    echo '  </nav>';
+    echo '</header>';
+
+    // very small, dependency-free theme toggle persisted in localStorage
+    echo '<script>(function(){const K="cv_theme";function apply(t){document.documentElement.dataset.theme=t;localStorage.setItem(K,t);}apply(localStorage.getItem(K)||"dark");document.addEventListener("DOMContentLoaded",function(){var b=document.getElementById("themeToggle");if(b){b.addEventListener("click",function(){apply((document.documentElement.dataset.theme==="dark")?"light":"dark");});}});})();</script>';
+  }
+}
+
+/** Footer + </body></html> */
+if (!function_exists('page_foot')) {
+  function page_foot(){
+    echo '<footer class="foot">© '.date('Y').' Cozy Vibes Radio — stay cozy ☕</footer>';
+    echo "</body></html>";
+  }
+}

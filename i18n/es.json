@@ -1,0 +1,23 @@
+{
+  "nav.home": "Inicio",
+  "nav.partners": "Socios",
+  "nav.about": "Acerca",
+  "nav.legal": "Legal",
+  "nav.admin": "Admin",
+  "hero.title": "Encuentra tu vibra cozy ☕",
+  "hero.subtitle": "Sin anuncios • Diseño minimalista • Global y multilingüe",
+  "search.placeholder": "Busca streams (lo-fi, jazz, lluvia...)",
+  "filter.genre": "Género",
+  "filter.country": "País",
+  "filter.apply": "Filtrar",
+  "filter.random": "Sorpréndeme",
+  "grid.noresults": "Sin resultados.",
+  "admin.login": "Login Admin",
+  "partner.title": "Partner Stream",
+  "partner.subtitle": "Hazte socio: sube tus streams, personaliza el tema y ve estadísticas.",
+  "about.title": "Acerca de",
+  "about.text": "Cozy Vibes Radio es un hub internacional sin anuncios para música de enfoque y relax.",
+  "legal.title": "Legal • GDPR • DMCA",
+  "legal.text": "Contacto: legal@cozyvibes.radio — Retiradas procesadas con rapidez.",
+  "footer.note": "Sin anuncios"
+}

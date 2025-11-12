@@ -1,0 +1,23 @@
+[
+  {
+    "id": "u_admin",
+    "email": "admin@cozy.local",
+    "name": "Owner",
+    "role": "admin",
+    "password_sha256": "240be518fabd2724ddb6f04eeb1da5967448d7e831c08c8fa822809f74c720a9"
+  },
+  {
+    "id": "u_partner",
+    "email": "partner@cozy.local",
+    "name": "Partner",
+    "role": "partner",
+    "password_sha256": "d4e870198339c045e84f416cc6a1f15c30f010f68e14c637a9d35366f2e35ba6"
+  },
+  {
+    "id": "u_user",
+    "email": "user@cozy.local",
+    "name": "User",
+    "role": "user",
+    "password_sha256": "e606e38b0d8c19b24cf0ee3808183162ea7cd63ff7912dbb22b5e803286b4446"
+  }
+]

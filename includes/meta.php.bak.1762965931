@@ -1,0 +1,58 @@
+<?php
+if (!defined('SITE_NAME')) define('SITE_NAME','Cozy Vibes Radio');
+
+/**
+ * page_head($opts)
+ * Acceptă fie array, fie string ('home', 'partners'...) – compat legacy.
+ */
+function page_head($opts = []) {
+  // Compat: dacă vine string, tratează-l drept "active" page
+  $active = '';
+  if (is_string($opts)) {
+    $active = $opts;
+    $opts = [];
+  }
+  if (!is_array($opts)) $opts = [];
+
+  $title   = isset($opts['title']) ? (string)$opts['title'] : SITE_NAME;
+  $desc    = isset($opts['description']) ? (string)$opts['description'] : (SITE_NAME.' — 24/7 livestreams: jazz, lofi, ambient, rain.');
+  $noindex = !empty($opts['noindex']);
+
+  if ($active && empty($opts['active'])) $opts['active'] = $active;
+  $GLOBALS['__cv_active'] = $opts['active'] ?? ($GLOBALS['__cv_active'] ?? '');
+
+  echo "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n<meta charset=\"utf-8\">\n<meta name=\"viewport\" content=\"width=device-width,initial-scale=1\">\n";
+  echo '<title>'.htmlspecialchars($title)."</title>\n";
+  echo '<meta name="description" content="'.htmlspecialchars($desc).'">'."\n";
+  if ($noindex) echo "<meta name=\"robots\" content=\"noindex,nofollow\">\n";
+  echo "<link rel=\"stylesheet\" href=\"/assets/css/app.css?v=".time()."\">\n";
+  echo "</head>\n<body class=\"site\">\n";
+}
+
+/**
+ * header_nav($active) – dacă nu primește, folosește globalul setat în page_head()
+ */
+function header_nav($active = '') {
+  if (!$active && isset($GLOBALS['__cv_active'])) $active = $GLOBALS['__cv_active'];
+  $links = [
+    ['href'=>'/','key'=>'home','label'=>'Home'],
+    ['href'=>'/partners.php','key'=>'partners','label'=>'Partners'],
+    ['href'=>'/about.php','key'=>'about','label'=>'About'],
+    ['href'=>'/admin/','key'=>'admin','label'=>'Admin'],
+  ];
+  echo "<header class=\"topbar\">\n  <a class=\"brand\" href=\"/\">".SITE_NAME."</a>\n  <nav>\n";
+  foreach ($links as $L) {
+    $cls = ($active === $L['key']) ? ' class="active"' : '';
+    echo '    <a'.$cls.' href="'.$L['href'].'">'.htmlspecialchars($L['label'])."</a>\n";
+  }
+  echo "  </nav>\n</header>\n";
+}
+
+/** page_foot() */
+function page_foot() {
+  echo "<footer class=\"site-foot\">\n";
+  echo "  <small>&copy; ".date('Y').' '.SITE_NAME." — stay cozy ☕</small>\n";
+  echo "</footer>\n";
+  echo "<script src=\"/assets/js/app.js?v=".time()."\"></script>\n";
+  echo "</body>\n</html>";
+}

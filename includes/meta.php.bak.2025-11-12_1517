@@ -1,0 +1,42 @@
+<?php
+require_once __DIR__.'/utils.php';
+$cfg = cfg();
+function page_head($title = null, $desc = 'Muzică relaxantă: lo-fi, chill, jazz, ambient. Fără reclame.'){
+  $site = e(cfg()['site_name']);
+  $t = $title ? e($title).' – '.$site : $site;
+  $d = e($desc);
+  $ver = e(cfg()['assets_version']);
+  $base = base_url();
+  echo "<!doctype html><html lang='".e(detect_locale())."'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'/>";
+  echo "<title>{$t}</title><meta name='description' content='{$d}'/>";
+  echo "<link rel='preconnect' href='https://fonts.googleapis.com'><link rel='preconnect' href='https://fonts.gstatic.com' crossorigin><link href='https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap' rel='stylesheet'>";
+  echo "<link rel='stylesheet' href='".base_url("assets/css/style.css?v={$ver}")."'>";
+  echo "<script defer src='".base_url("assets/js/app.js?v={$ver}")."'></script>";
+  echo "<meta property='og:title' content='{$t}'><meta property='og:description' content='{$d}'><meta property='og:type' content='website'><meta property='og:url' content='".base_url()."'>";
+  // hreflang
+  foreach(cfg()['locales'] as $lc){
+    echo "<link rel='alternate' hreflang='{$lc}' href='{$base}?lang={$lc}'>";
+  }
+  // schema
+  $schema = [
+    '@context'=>'https://schema.org',
+    '@type'=>'BroadcastService',
+    'name'=>$site,
+    'description'=>$d,
+    'url'=>$base,
+  ];
+  echo "<script type='application/ld+json'>".json_encode($schema)."</script>";
+  echo "</head><body class='theme-dark'>";
+  header_nav();
+}
+function header_nav(){
+  $base = base_url();
+  echo "<header class='cv-header'><a class='logo' href='{$base}'>☕ Cozy Vibes</a><nav>";
+  echo "<a href='{$base}'>".e(t('nav.home'))."</a><a href='".base_url("partners.php")."'>".e(t('nav.partners'))."</a><a href='".base_url("about.php")."'>".e(t('nav.about'))."</a><a href='".base_url("legal.php")."'>".e(t('nav.legal'))."</a>";
+  echo "<a class='pill' href='".base_url("admin/")."'>".e(t('nav.admin'))."</a>";
+  echo "<div class='lang-badges' style='position:absolute;right:16px;top:60px;display:flex;gap:6px'><?php foreach(cfg()['locales'] as $lc): ?><a class='badge' href='<?= base_url("?lang=$lc") ?>'><?= strtoupper($lc) ?></a><?php endforeach; ?></div></nav></header>";
+}
+function page_foot(){
+  echo "<footer class='cv-footer'>© ".date('Y')." Cozy Vibes Radio • ".e(t('footer.note'))." • <a href='".base_url("legal.php")."'>GDPR/DMCA</a> • <a href='".base_url("rss.php")."'>RSS</a></footer>";
+  echo "</body></html>";
+}

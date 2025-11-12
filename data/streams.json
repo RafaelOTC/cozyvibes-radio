@@ -1,0 +1,43 @@
+[
+  {
+    "id": "s_1",
+    "slug": "lofi-rain-study",
+    "title": "Lo-fi Rain Study",
+    "youtube_id": "jfKfPfyJRdk",
+    "genres": [
+      "lofi",
+      "study",
+      "rain"
+    ],
+    "country": "ro",
+    "status": "live",
+    "created_at": "2025-11-11T22:06:10.121599"
+  },
+  {
+    "id": "s_2",
+    "slug": "jazz-cafe",
+    "title": "Jazz Caf\u00e9",
+    "youtube_id": "Dx5qFachd3A",
+    "genres": [
+      "jazz",
+      "chill"
+    ],
+    "country": "us",
+    "status": "live",
+    "created_at": "2025-11-11T22:06:10.121599"
+  },
+  {
+    "id": "s_3",
+    "slug": "forest-ambient",
+    "title": "Forest Ambient",
+    "youtube_id": "HMnrl0tmd3k",
+    "genres": [
+      "ambient",
+      "nature",
+      "focus"
+    ],
+    "country": "jp",
+    "status": "live",
+    "created_at": "2025-11-11T22:06:10.121599"
+  }
+]

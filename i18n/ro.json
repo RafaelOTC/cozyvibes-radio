@@ -1,0 +1,23 @@
+{
+  "nav.home": "Acasă",
+  "nav.partners": "Parteneri",
+  "nav.about": "Despre",
+  "nav.legal": "Legal",
+  "nav.admin": "Admin",
+  "hero.title": "Găsește-ți vibe-ul cozy ☕",
+  "hero.subtitle": "Fără reclame • Design minimalist • Global & multi-lingv",
+  "search.placeholder": "Caută stream (lo-fi, jazz, ploaie...)",
+  "filter.genre": "Gen",
+  "filter.country": "Țară",
+  "filter.apply": "Filtrează",
+  "filter.random": "Surprinde-mă",
+  "grid.noresults": "Niciun rezultat.",
+  "admin.login": "Autentificare Admin",
+  "partner.title": "Partner Stream",
+  "partner.subtitle": "Devino partener: încarcă streamuri, personalizează tema și vezi statistici.",
+  "about.title": "Despre",
+  "about.text": "Cozy Vibes Radio este un hub internațional fără reclame, dedicat muzicii de focus și relaxare.",
+  "legal.title": "Legal • GDPR • DMCA",
+  "legal.text": "Contact: legal@cozyvibes.radio — Orice cerere de takedown va fi procesată rapid.",
+  "footer.note": "Fără reclame"
+}
