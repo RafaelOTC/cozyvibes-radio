@@ -29,7 +29,7 @@ function page_head($opts = []) {
 
   var meta = document.querySelector('meta[name="theme-color"]');
   if (!meta) { meta = document.createElement('meta'); meta.setAttribute('name', 'theme-color'); document.head.appendChild(meta); }
-  meta.setAttribute('content', theme === 'dark' ? '#0b1220' : '#ffffff');
+  meta.setAttribute('content', theme === 'dark' ? '#0b1220' : '#f8f5ef');
 })();
 </script>
 <link rel="stylesheet" href="/assets/css/theme.css">
