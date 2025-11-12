@@ -1,0 +1,74 @@
+/* ===== Cozy Vibes Radio – Theme Tokens ===== */
+:root {
+  /* Light */
+  --bg: #ffffff;
+  --text: #0f172a;          /* slate-900 */
+  --muted: #475569;         /* slate-600 */
+  --card: #f8fafc;          /* slate-50 */
+  --border: #e2e8f0;        /* slate-200 */
+  --accent: #7c3aed;        /* violet-600 */
+  --accent-contrast: #ffffff;
+  --link: #2563eb;          /* blue-600 */
+  --shadow: 0 10px 25px rgba(2, 6, 23, .06);
+}
+
+:root[data-theme="dark"] {
+  --bg: #0b1220;            /* foarte închis, albastru-negru */
+  --text: #e5e7eb;          /* slate-200 */
+  --muted: #9ca3af;         /* gray-400 */
+  --card: #0f172a;          /* slate-900 */
+  --border: #1f2937;        /* gray-800 */
+  --accent: #8b5cf6;        /* violet-500 */
+  --accent-contrast: #0b1220;
+  --link: #93c5fd;          /* blue-300 */
+  --shadow: 0 10px 25px rgba(0, 0, 0, .35);
+}
+
+/* Respectă preferința sistemului când nu e ales manual */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]):not([data-theme="dark"]) {
+    color-scheme: dark;
+  }
+}
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="light"]):not([data-theme="dark"]) {
+    color-scheme: light;
+  }
+}
+
+/* ===== Aplicare globală ===== */
+html, body {
+  background: var(--bg);
+  color: var(--text);
+}
+* { box-sizing: border-box; }
+
+a { color: var(--link); }
+hr, .divider { border-color: var(--border); }
+
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  box-shadow: var(--shadow);
+}
+
+.btn {
+  display: inline-flex; align-items: center; gap: .5rem;
+  background: var(--accent); color: var(--accent-contrast);
+  border: 0; border-radius: 10px; padding: .6rem .9rem;
+  font-weight: 600; cursor: pointer;
+}
+.btn.secondary {
+  background: transparent; color: var(--text);
+  border: 1px solid var(--border);
+}
+
+.tag {
+  display:inline-block; padding:.25rem .5rem; border-radius:999px;
+  background: color-mix(in srgb, var(--accent) 15%, transparent);
+  color: var(--text); border: 1px solid var(--border);
+}
+
+/* micro-anim pentru schimbare temă */
+html { transition: background-color .2s ease, color .2s ease; }
