@@ -1,23 +1,48 @@
-- name: Set up SSH key (from base64)
-  env:
-    SSH_PRIVATE_KEY_B64: ${{ secrets.SSH_PRIVATE_KEY_B64 }}
-    SSH_HOST: ${{ secrets.SSH_HOST }}
-    SSH_PORT: ${{ secrets.SSH_PORT }}
-  run: |
-    install -m 700 -d ~/.ssh
-    echo "${SSH_PRIVATE_KEY_B64}" | base64 -d > ~/.ssh/deploy_key
-    chmod 600 ~/.ssh/deploy_key
-    ssh-keyscan -p "${SSH_PORT:-22}" "${SSH_HOST}" >> ~/.ssh/known_hosts
-    chmod 644 ~/.ssh/known_hosts
+name: Deploy to VPS
 
-- name: Rsync code to server
-  env:
-    SSH_HOST: ${{ secrets.SSH_HOST }}
-    SSH_USER: ${{ secrets.SSH_USER }}
-    SSH_PORT: ${{ secrets.SSH_PORT }}
-    DEPLOY_PATH: ${{ secrets.DEPLOY_PATH }}
-  run: |
-    RSYNC_EXCLUDES="--exclude '.git' --exclude 'README.md' --exclude '.github'"
-    rsync -az --delete $RSYNC_EXCLUDES \
-      -e "ssh -i ~/.ssh/deploy_key -p ${SSH_PORT:-22} -o IdentitiesOnly=yes -o StrictHostKeyChecking=yes" \
-      ./ "${SSH_USER}@${SSH_HOST}:${DEPLOY_PATH}/"
+on:
+  push:
+    branches: ["main"]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Prepare SSH key
+        env:
+          SSH_PRIVATE_KEY_B64: ${{ secrets.SSH_PRIVATE_KEY_B64 }}
+        run: |
+          set -e
+          mkdir -p ~/.ssh
+          echo "$SSH_PRIVATE_KEY_B64" | base64 -d > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          # Accept host key
+          ssh-keyscan -p "${{ secrets.SSH_PORT }}" "${{ secrets.SSH_HOST }}" >> ~/.ssh/known_hosts
+
+      - name: Rsync to server
+        env:
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+          SSH_PORT: ${{ secrets.SSH_PORT }}
+          SSH_USER: ${{ secrets.SSH_USER }}
+          DEPLOY_PATH: ${{ secrets.DEPLOY_PATH }}
+        run: |
+          set -e
+          RSYNC_EXCLUDES="--exclude '.git' --exclude '.github' --exclude 'README.md'"
+          rsync -avz $RSYNC_EXCLUDES -e "ssh -i ~/.ssh/deploy_key -p $SSH_PORT" ./ "$SSH_USER@$SSH_HOST:$DEPLOY_PATH/"
+
+      - name: Reload services
+        env:
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+          SSH_PORT: ${{ secrets.SSH_PORT }}
+          SSH_USER: ${{ secrets.SSH_USER }}
+        run: |
+          set -e
+          ssh -i ~/.ssh/deploy_key -p "$SSH_PORT" "$SSH_USER@$SSH_HOST" \
+            'sudo systemctl reload nginx && sudo systemctl restart php8.3-fpm || true'
