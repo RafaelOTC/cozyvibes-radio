@@ -3,7 +3,6 @@ name: Deploy to VPS
 on:
   push:
     branches: [ "main" ]
-  workflow_dispatch:
 
 jobs:
   deploy:
@@ -13,33 +12,30 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Setup SSH
+      - name: Set up SSH key
         run: |
-          mkdir -p ~/.ssh
-          echo "${{ secrets.SSH_KEY }}" > ~/.ssh/id_ed25519
-          chmod 600 ~/.ssh/id_ed25519
-          ssh-keyscan -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
+          install -m 700 -d ~/.ssh
+          printf "%s" "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          # Accept host key automatic (fără prompt)
+          ssh-keyscan -p "${{ secrets.SSH_PORT || 22 }}" "${{ secrets.SSH_HOST }}" >> ~/.ssh/known_hosts
+          chmod 644 ~/.ssh/known_hosts
 
       - name: Rsync code to server
         env:
-          RSYNC_RSH: "ssh -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=yes"
+          RSYNC_EXCLUDES: "--exclude '.git' --exclude 'README.md' --exclude '.github'"
         run: |
-          RSYNC_EXCLUDES="--exclude '.git*' --exclude 'README.md' --exclude '.github'"
-          rsync -az --delete $RSYNC_EXCLUDES ./ ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/var/www/cozyvibes
+          rsync -az --delete $RSYNC_EXCLUDES \
+            -e "ssh -i ~/.ssh/deploy_key -p ${SSH_PORT:-22} -o StrictHostKeyChecking=yes" \
+            ./ "${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:${{ secrets.DEPLOY_PATH }}/"
 
-      - name: Post-deploy tasks on server
+      - name: Post-deploy tasks
         run: |
-          ssh -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=yes ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} <<'SSH'
-            set -e
-            cd /var/www/cozyvibes
-            chown -R www-data:www-data .
-            find . -type d -exec chmod 775 {} \;
-            find . -type f -exec chmod 664 {} \;
-
-            # asigură directoarele uzuale (fără să stricăm nimic)
-            mkdir -p assets/css assets/img
-
-            # reload servicii
-            systemctl reload nginx
-            systemctl restart php8.3-fpm || true
-          SSH
+          ssh -i ~/.ssh/deploy_key -p ${SSH_PORT:-22} -o StrictHostKeyChecking=yes \
+            "${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}" <<'SSH'
+            sudo chown -R www-data:www-data /var/www/cozyvibes
+            sudo find /var/www/cozyvibes -type d -exec chmod 775 {} \;
+            sudo find /var/www/cozyvibes -type f -exec chmod 664 {} \;
+            sudo systemctl reload nginx
+            sudo systemctl restart php8.3-fpm || true
+SSH
