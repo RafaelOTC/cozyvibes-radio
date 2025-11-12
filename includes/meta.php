@@ -1,6 +1,5 @@
 <?php
 if (!defined('SITE_NAME')) define('SITE_NAME','Cozy Vibes Radio');
-<?php include __DIR__.'/theme-head.php'; ?>
 
 function page_head($opts = []) {
   if (is_string($opts)) $opts = ['active'=>$opts];
@@ -21,6 +20,7 @@ function page_head($opts = []) {
   header_nav($active);
 }
 
+
 function header_nav($active = '') {
   if (!$active && isset($GLOBALS['__cv_active'])) $active = $GLOBALS['__cv_active'];
   $links = [
@@ -35,6 +35,7 @@ function header_nav($active = '') {
     $cls = ($active === $L['key']) ? 'active' : '';
     echo "<a class=\"$cls\" href=\"{$L['href']}\">{$L['label']}</a>";
   }
+  
   echo "</nav></div></header>";
 }
 
