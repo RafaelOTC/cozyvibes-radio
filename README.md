@@ -1,2 +1,2 @@
 # cozyvibes-radio
-Cozy Vibes Radio — Relaxing streams for focus, study and calm. LAVI PUTE
+Cozy Vibes Radio — Relaxing streams for focus, study and calm.
